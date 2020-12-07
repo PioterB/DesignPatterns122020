@@ -1,0 +1,76 @@
+﻿<Window x:Class="PbLab.DesignPatterns.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:PbLab.DesignPatterns.ViewModels"
+        xmlns:services="clr-namespace:PbLab.DesignPatterns.Services"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Name="LayoutRoot">
+	<Grid>
+        <Grid.RowDefinitions>
+			<!-- menu -->
+	        <RowDefinition Height="Auto"></RowDefinition>
+
+	        <!-- selected files-->
+	        <RowDefinition Height="Auto"></RowDefinition>
+
+			<!-- file content -->
+			<RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+	    <!-- file selection -->
+		<StackPanel  Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
+			<StackPanel.Resources>
+				<Style TargetType="Button">
+					<Setter Property="Padding" Value="5,2"></Setter>
+					<Setter Property="Margin" Value="5,2"></Setter>
+				</Style>
+			</StackPanel.Resources>
+			<Button Command="{Binding OpenFileCmd}" HorizontalAlignment="Right">Add File</Button>
+			<Button Command="{Binding ReadFileCmd}" HorizontalAlignment="Right">Load</Button>
+		</StackPanel>
+		
+		<!-- selected files-->
+		<StackPanel Grid.Row="1" Grid.Column="0" >
+			<TextBlock Text="Selected files"/>
+			<ListBox ItemsSource="{Binding SelectedFiles}" BorderThickness="0" Height="100">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal" Margin="2">
+							<Button Padding="5,1" Command="{Binding DataContext.RemoveFileCmd, ElementName=LayoutRoot}" CommandParameter="{Binding}">X</Button>
+							<TextBlock Text="{Binding}" VerticalAlignment="Center"></TextBlock>
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+
+		<!-- file content -->
+		<StackPanel Grid.Row="2" Grid.Column="0">
+			<TextBlock Text="Samples"/>
+			<ListBox ItemsSource="{Binding Samples}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.Resources>
+								<Style TargetType="TextBlock">
+									<Setter Property="Margin" Value="5,2"></Setter>
+								</Style>
+							</Grid.Resources>
+							<Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+								<ColumnDefinition Width="*"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Id}" HorizontalAlignment="Stretch"></TextBlock>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TimeStamp}" HorizontalAlignment="Stretch"></TextBlock>
+							<TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Mass}" HorizontalAlignment="Stretch"></TextBlock>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+</Grid>
+</Window>
