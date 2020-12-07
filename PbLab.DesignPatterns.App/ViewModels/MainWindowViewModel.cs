@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows.Navigation;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
@@ -29,16 +32,29 @@ namespace PbLab.DesignPatterns.ViewModels
 		private bool CanReadFiles() => _selectedFiles.Any();
 
 		private void OnReadFiles()
-		{
+        {
+            var report = new ReportPrototype(DateTime.Now);
+			var reports = new List<string>(_selectedFiles.Count);
+            var timer = new Stopwatch();
 			_samples.Clear();
 			foreach (var file in _selectedFiles)
             {
+                var stats = new StatsBuilder(file);
                 var extension = new FileInfo(file).Extension.Trim('.');
-                using (StreamReader stream = File.OpenText(file))
+                using (var stream = File.OpenText(file))
                 {
+					timer.Start();
                     var samples = _readerFactory.Get(extension).Read(stream).ToList();
+					timer.Stop();
                     samples.ForEach(s => _samples.Add(s));
+
+                    stats.AddDuration(timer.Elapsed);
+                    stats.AddCount((uint)samples.Count);
+
+                    timer.Reset();
                 }
+				
+                reports.Add(report.Clone(stats.Build()));
             }
 
 			_selectedFiles.Clear();

@@ -31,10 +31,12 @@ namespace PbLab.DesignPatterns.Model
         public static MassValue Parse(string mass)
         {
             var massParts = mass.Split((' '));
-            var value = decimal.Parse(massParts[0]);
-            var unit = (MassUnit)Enum.Parse(typeof(MassUnit), massParts[1]);
 
-			return new MassValue(value, unit);
+			var builder = new MassValueBuilder();
+			builder.AddValue(massParts[0]);
+			builder.AddUnit(massParts[1]);
+
+            return builder.Build();
 		}
 	}
 }

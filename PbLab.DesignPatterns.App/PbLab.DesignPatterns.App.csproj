@@ -67,6 +67,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\IMassValueBuilder.cs" />
+    <Compile Include="Model\MassValueBuilder.cs" />
     <Compile Include="Tools\IdGenerator.cs" />
     <Compile Include="Model\MassUnit.cs" />
     <Compile Include="Model\MassValue.cs" />
@@ -77,6 +79,9 @@
     <Compile Include="Services\JsonSerializer.cs" />
     <Compile Include="Services\ISamplesReaderFactory.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Reporting\ReportPrototype.cs" />
+    <Compile Include="Reporting\SamplesReadStatistics.cs" />
+    <Compile Include="Reporting\StatsBuilder.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
