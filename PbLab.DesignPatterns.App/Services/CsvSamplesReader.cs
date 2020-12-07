@@ -14,13 +14,11 @@ namespace PbLab.DesignPatterns.Services
             while (string.IsNullOrEmpty(line) == false)
             {
                 var parts = line.Split(';');
-                
-                var massParts = parts[1].Split((' '));
-                var value = decimal.Parse(massParts[0]);
-                var unit = (MassUnit)Enum.Parse(typeof(MassUnit), massParts[1]);
-                var result = new MassValue(value, unit);
 
-                var sample = new Sample(DateTimeOffset.Parse(parts[0]), result);
+                var date = DateTimeOffset.Parse(parts[0]);
+                var result = MassValue.Parse(parts[1]);
+                
+                var sample = new Sample(date, result);
                 
                 results.Add(sample);
                 line = stream.ReadLine();

@@ -12,7 +12,7 @@ namespace PbLab.DesignPatterns
 		public MainWindow()
 		{
 			InitializeComponent();
-			DataContext = new MainWindowViewModel();
+			DataContext = new MainWindowViewModel(new LocalFileReaderFactory());
 		}
 	}
 }

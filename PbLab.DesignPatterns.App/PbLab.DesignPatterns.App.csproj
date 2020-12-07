@@ -74,6 +74,7 @@
     <Compile Include="Services\XmlSamplesReader.cs" />
     <Compile Include="Services\ISamplesReader.cs" />
     <Compile Include="Services\JsonSerializer.cs" />
+    <Compile Include="Services\ISamplesReaderFactory.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -4,7 +4,7 @@ using PbLab.DesignPatterns.Model;
 
 namespace PbLab.DesignPatterns.Services
 {
-    internal interface ISamplesReader
+    public interface ISamplesReader
     {
         IEnumerable<Sample> Read(StreamReader stream);
     }

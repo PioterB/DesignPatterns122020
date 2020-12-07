@@ -7,15 +7,18 @@ using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using PbLab.DesignPatterns.Model;
+using PbLab.DesignPatterns.Services;
 
 namespace PbLab.DesignPatterns.ViewModels
 {
 	public class MainWindowViewModel : ViewModelBase
 	{
+        private readonly ISamplesReaderFactory _readerFactory;
         private readonly ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
 		private readonly ObservableCollection<Sample> _samples = new ObservableCollection<Sample>();
-		public MainWindowViewModel()
+		public MainWindowViewModel(ISamplesReaderFactory readerFactory)
 		{
+            _readerFactory = readerFactory;
             SelectedFiles = new ReadOnlyObservableCollection<string>(_selectedFiles);
 			Samples = new ReadOnlyObservableCollection<Sample>(_samples);
 			OpenFileCmd = new RelayCommand(OnOpenFile, CanOpenFile);
@@ -29,17 +32,14 @@ namespace PbLab.DesignPatterns.ViewModels
 		{
 			_samples.Clear();
 			foreach (var file in _selectedFiles)
-			{
-				using (StreamReader stream = File.OpenText(file))
-				{
-					JsonSerializer serializer = new JsonSerializer();
-					using (JsonReader r = new JsonTextReader(stream))
-					{
-						var samples = serializer.Deserialize<List<Sample>>(r);
-						samples.ForEach(s => _samples.Add(s));
-					}
-				}
-			}
+            {
+                var extension = new FileInfo(file).Extension.Trim('.');
+                using (StreamReader stream = File.OpenText(file))
+                {
+                    var samples = _readerFactory.Get(extension).Read(stream).ToList();
+                    samples.ForEach(s => _samples.Add(s));
+                }
+            }
 
 			_selectedFiles.Clear();
 		}
