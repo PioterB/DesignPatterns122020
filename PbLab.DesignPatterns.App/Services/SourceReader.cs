@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows.Markup;
 using PbLab.DesignPatterns.Audit;
 using PbLab.DesignPatterns.Model;
 using PbLab.DesignPatterns.Reporting;
@@ -12,7 +13,7 @@ namespace PbLab.DesignPatterns.Services
 {
     public abstract class SourceReader
     {
-        public static IEnumerable<Sample> ReadAllSources(IEnumerable<string> paths, LocalFileReaderPool readersPool, ILogger logger)
+        public static IEnumerable<Sample> ReadAllSources(IEnumerable<string> paths, LocalFileReaderPool readersPool, ILogger logger, IChanelFactory chanelFactory)
         {
             var result = new List<Sample>();
             var report = new ReportPrototype(DateTime.Now);
@@ -22,7 +23,9 @@ namespace PbLab.DesignPatterns.Services
             {
                 var stats = new StatsBuilder(file);
                 var extension = new FileInfo(file).Extension.Trim('.');
-                using (var stream = FileProxy.OpenText(file))
+                var protocol = ExtractProtocol(file);
+                var chanel = chanelFactory.Create(protocol);
+                using (var stream = chanel.Connect(file))
                 {
                     var reader = readersPool.Borrow(extension);
                     timer.Start();
@@ -42,6 +45,11 @@ namespace PbLab.DesignPatterns.Services
             }
 
             return result;
+        }
+
+        private static string ExtractProtocol(string file)
+        {
+            return file.Split(':').First();
         }
     }
 }

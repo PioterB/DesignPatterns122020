@@ -26,5 +26,10 @@ namespace PbLab.DesignPatterns.Services
 
             return results;
         }
+
+        public IEnumerable<Sample> Read(IChanel chanel, string path)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

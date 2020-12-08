@@ -69,14 +69,22 @@
     </ApplicationDefinition>
     <Compile Include="Audit\AppDomainDecorator.cs" />
     <Compile Include="Audit\ComposedLogger.cs" />
+    <Compile Include="Audit\DecoratorTypeAdapter.cs" />
     <Compile Include="Audit\ILogger.cs" />
     <Compile Include="Audit\LoggerFactory.cs" />
     <Compile Include="Audit\ThreadDecorator.cs" />
     <Compile Include="Audit\TimeStampDecorator.cs" />
     <Compile Include="Model\IMassValueBuilder.cs" />
     <Compile Include="Model\MassValueBuilder.cs" />
+    <Compile Include="Services\ChanelFactory.cs" />
+    <Compile Include="Services\EmptyReader.cs" />
+    <Compile Include="Services\FileChanel.cs" />
+    <Compile Include="Services\HttpChanel.cs" />
+    <Compile Include="Services\IChanel.cs" />
+    <Compile Include="Services\IChanelFactory.cs" />
     <Compile Include="Services\LocalFileReaderFactory.cs" />
     <Compile Include="Services\LocalFileReaderPool.cs" />
+    <Compile Include="Services\NullChanel.cs" />
     <Compile Include="Services\SourceReader.cs" />
     <Compile Include="Tools\IdGenerator.cs" />
     <Compile Include="Model\MassUnit.cs" />

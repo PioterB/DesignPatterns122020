@@ -15,5 +15,13 @@ namespace PbLab.DesignPatterns.Services
                 return serializer.Deserialize<List<Sample>>(r);
             }
         }
+
+        public IEnumerable<Sample> Read(IChanel chanel, string path)
+        {
+            using (var stream = chanel.Connect(path))
+            {
+                return Read(stream);
+            }
+        }
     }
 }

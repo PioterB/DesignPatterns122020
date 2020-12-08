@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace PbLab.DesignPatterns.Audit
 {
     public class LoggerFactory
     {
+        private readonly DecoratorTypeAdapter _decoratorAdapter;
         private readonly ILogger _composedLogger = new ComposedLogger();
 
-        private readonly IDictionary<string, Type> _decoratorsMap =
-            new Dictionary<string, Type>()
-            {
-                {"time", typeof(TimeStampDecorator)},
-                {"thread", typeof(ThreadDecorator)},
-                {"domain", typeof(AppDomainDecorator)},
-            };
+        public LoggerFactory(DecoratorTypeAdapter decoratorAdapter)
+        {
+            _decoratorAdapter = decoratorAdapter;
+        }
 
         public ILogger Create(params string[] decorators)
         {
@@ -26,25 +25,17 @@ namespace PbLab.DesignPatterns.Audit
                 return result;
             }
 
-            var unknown = decorators.Except(_decoratorsMap.Keys).ToArray();
-            if (unknown.Any())
+            var fromEnd = decorators.Reverse().ToArray();
+
+            foreach (var decorator in _decoratorAdapter.FromString(fromEnd))
             {
-                throw new ArgumentOutOfRangeException("invalid decorator name: " + string.Join(",", unknown));
-            }
-
-            var fromEnd = decorators.Reverse();
-
-
-            foreach (var decorator in fromEnd)
-            {
-               
-                result = FactorizeDecorator(result, _decoratorsMap[decorator]);
+                result = FactorizeDecorator(result, decorator);
             }
 
             return result;
         }
 
-        /*
+        
         public ILogger Create(params Type[] decorators)
         {
             var result = _composedLogger;
@@ -55,7 +46,7 @@ namespace PbLab.DesignPatterns.Audit
             }
 
             var fromEnd = decorators.Reverse();
-
+            
             foreach (var decoratorType in fromEnd)
             {
                 result = FactorizeDecorator(result, decoratorType);
@@ -63,10 +54,10 @@ namespace PbLab.DesignPatterns.Audit
 
             return _composedLogger;
         }
-        */
+        
         private static ILogger FactorizeDecorator(ILogger result, Type decoratorType)
         {
-            result = (ILogger) Activator.CreateInstance(decoratorType, BindingFlags.CreateInstance, null, result);
+            result = (ILogger) Activator.CreateInstance(decoratorType, BindingFlags.CreateInstance, null,  new[] {result});
             return result;
         }
     }

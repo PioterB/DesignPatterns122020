@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using PbLab.DesignPatterns.Model;
 
 namespace PbLab.DesignPatterns.Services
 {
-    class XmlSamplesReader : ISamplesReader
+    public class EmptyReader : ISamplesReader
     {
         public IEnumerable<Sample> Read(StreamReader stream)
         {
-            throw new System.NotImplementedException();
+            return Enumerable.Empty<Sample>();
         }
 
         public IEnumerable<Sample> Read(IChanel chanel, string path)
         {
-            throw new System.NotImplementedException();
+            return Enumerable.Empty<Sample>();
         }
     }
 }
