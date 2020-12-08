@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PbLab.DesignPatterns.ViewModels
+namespace PbLab.DesignPatterns.Reporting
 {
     internal class StatsBuilder
     {
@@ -11,7 +11,6 @@ namespace PbLab.DesignPatterns.ViewModels
         public StatsBuilder(string file)
         {
             _file = file;
-            throw new NotImplementedException();
         }
 
         public SamplesReadStatistics Build()

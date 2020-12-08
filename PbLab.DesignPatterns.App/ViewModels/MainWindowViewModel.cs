@@ -4,12 +4,17 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Sockets;
 using System.Windows.Navigation;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using PbLab.DesignPatterns.Audit;
 using PbLab.DesignPatterns.Model;
+using PbLab.DesignPatterns.Reporting;
 using PbLab.DesignPatterns.Services;
 
 namespace PbLab.DesignPatterns.ViewModels
@@ -19,17 +24,24 @@ namespace PbLab.DesignPatterns.ViewModels
         private readonly ISamplesReaderFactory _readerFactory;
         private readonly ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
 		private readonly ObservableCollection<Sample> _samples = new ObservableCollection<Sample>();
-		public MainWindowViewModel(ISamplesReaderFactory readerFactory)
+		private readonly ObservableCollection<string> _logs = new ObservableCollection<string>();
+        private ILogger _logger;
+
+        public MainWindowViewModel(ISamplesReaderFactory readerFactory, LoggerFactory loggerFactory)
 		{
             _readerFactory = readerFactory;
+            _logger = loggerFactory.Create();
+			_logger.NewEntry += message => _logs.Add(message);
+
             SelectedFiles = new ReadOnlyObservableCollection<string>(_selectedFiles);
 			Samples = new ReadOnlyObservableCollection<Sample>(_samples);
+			Logs = new ReadOnlyObservableCollection<string>(_logs);
 			OpenFileCmd = new RelayCommand(OnOpenFile, CanOpenFile);
 			RemoveFileCmd = new RelayCommand<string>(OnRemoveFile, CanRemoveFile);
 			ReadFileCmd = new RelayCommand(OnReadFiles, CanReadFiles);
 		}
 
-		private bool CanReadFiles() => _selectedFiles.Any();
+        private bool CanReadFiles() => _selectedFiles.Any();
 
 		private void OnReadFiles()
         {
@@ -55,6 +67,7 @@ namespace PbLab.DesignPatterns.ViewModels
                 }
 				
                 reports.Add(report.Clone(stats.Build()));
+				_logger.Log(report.Clone(stats.Build()));
             }
 
 			_selectedFiles.Clear();
@@ -85,6 +98,8 @@ namespace PbLab.DesignPatterns.ViewModels
 		public ReadOnlyObservableCollection<string> SelectedFiles { get; }
 
 		public ReadOnlyObservableCollection<Sample> Samples { get; }
+
+		public ReadOnlyObservableCollection<string> Logs { get; }
 
 		public RelayCommand OpenFileCmd { get; private set; }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace PbLab.DesignPatterns.ViewModels
+namespace PbLab.DesignPatterns.Reporting
 {
     internal class ReportPrototype
     {
@@ -24,7 +24,7 @@ namespace PbLab.DesignPatterns.ViewModels
 
         private string LoadTemplateFromResources()
         {
-            throw new NotImplementedException();
+            return "{timestamp} loaded {count} in {duration} from {location}";
         }
     }
 }

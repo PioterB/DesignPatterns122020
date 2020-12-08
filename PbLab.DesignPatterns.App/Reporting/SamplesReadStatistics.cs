@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PbLab.DesignPatterns.ViewModels
+namespace PbLab.DesignPatterns.Reporting
 {
     internal class SamplesReadStatistics
     {

@@ -17,6 +17,9 @@
 
 			<!-- file content -->
 			<RowDefinition Height="*"></RowDefinition>
+
+            <!-- logs -->
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
 	    <!-- file selection -->
@@ -72,5 +75,11 @@
 				</ListBox.ItemTemplate>
 			</ListBox>
 		</StackPanel>
-</Grid>
+
+        <!-- logs -->
+        <StackPanel Grid.Row="3" Grid.Column="0">
+            <TextBlock Text="Logs"/>
+            <ListBox ItemsSource="{Binding Logs}"/>
+        </StackPanel>
+    </Grid>
 </Window>
