@@ -13,7 +13,7 @@ namespace PbLab.DesignPatterns
 		public MainWindow()
 		{
 			InitializeComponent();
-			var loggerFactory = new LoggerFactory();
+			var loggerFactory = new LoggerFactory(new DecoratorTypeAdapter());
 
             DataContext = new MainWindowViewModel(new LocalFileReaderPool(new LocalFileReaderFactory()), loggerFactory);
         }

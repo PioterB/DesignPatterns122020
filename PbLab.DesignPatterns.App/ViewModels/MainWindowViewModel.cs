@@ -50,7 +50,7 @@ namespace PbLab.DesignPatterns.ViewModels
         {
             _samples.Clear();
             
-            var samples = SourceReader.ReadAllSources(_selectedFiles, _readerFactory, _logger);
+            var samples = SourceReader.ReadAllSources(_selectedFiles, _readerFactory, _logger, new ChanelFactory());
 			samples.ToList().ForEach(s => _samples.Add(s));
             
             _selectedFiles.Clear();
