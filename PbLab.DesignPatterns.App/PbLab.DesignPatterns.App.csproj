@@ -74,6 +74,7 @@
     <Compile Include="Model\MassValueBuilder.cs" />
     <Compile Include="Services\LocalFileReaderFactory.cs" />
     <Compile Include="Services\LocalFileReaderPool.cs" />
+    <Compile Include="Services\SourceReader.cs" />
     <Compile Include="Tools\IdGenerator.cs" />
     <Compile Include="Model\MassUnit.cs" />
     <Compile Include="Model\MassValue.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Services\ISamplesReader.cs" />
     <Compile Include="Services\JsonSerializer.cs" />
     <Compile Include="Services\ISamplesReaderFactory.cs" />
+    <Compile Include="Tools\FileProxy.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Reporting\ReportPrototype.cs" />
     <Compile Include="Reporting\SamplesReadStatistics.cs" />

@@ -16,6 +16,7 @@ using PbLab.DesignPatterns.Audit;
 using PbLab.DesignPatterns.Model;
 using PbLab.DesignPatterns.Reporting;
 using PbLab.DesignPatterns.Services;
+using PbLab.DesignPatterns.Tools;
 
 namespace PbLab.DesignPatterns.ViewModels
 {
@@ -45,38 +46,15 @@ namespace PbLab.DesignPatterns.ViewModels
 
 		private void OnReadFiles()
         {
-            var report = new ReportPrototype(DateTime.Now);
-			var reports = new List<string>(_selectedFiles.Count);
-            var timer = new Stopwatch();
-			_samples.Clear();
-			foreach (var file in _selectedFiles)
-            {
-                var stats = new StatsBuilder(file);
-                var extension = new FileInfo(file).Extension.Trim('.');
-                using (var stream = File.OpenText(file))
-                {
-                    var reader = _readerFactory.Borrow(extension);
-					timer.Start();
-                    var samples = reader.Read(stream).ToList();
-					timer.Stop();
-					_readerFactory.Release(reader);
-					
-                    samples.ForEach(s => _samples.Add(s));
-
-                    stats.AddDuration(timer.Elapsed);
-                    stats.AddCount((uint)samples.Count);
-
-                    timer.Reset();
-                }
-				
-                reports.Add(report.Clone(stats.Build()));
-				_logger.Log(report.Clone(stats.Build()));
-            }
-
-			_selectedFiles.Clear();
+            _samples.Clear();
+            
+            var samples = SourceReader.ReadAllSources(_selectedFiles, _readerFactory, _logger);
+			samples.ToList().ForEach(s => _samples.Add(s));
+            
+            _selectedFiles.Clear();
 		}
 
-		private bool CanRemoveFile(string arg) => true;
+        private bool CanRemoveFile(string arg) => true;
 		private bool CanOpenFile() => true;
 
 		private void OnRemoveFile(string file)
