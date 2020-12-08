@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Markup;
 
 namespace PbLab.DesignPatterns.Services
 {

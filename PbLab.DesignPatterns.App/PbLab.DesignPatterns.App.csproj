@@ -73,6 +73,7 @@
     <Compile Include="Model\IMassValueBuilder.cs" />
     <Compile Include="Model\MassValueBuilder.cs" />
     <Compile Include="Services\LocalFileReaderFactory.cs" />
+    <Compile Include="Services\LocalFileReaderPool.cs" />
     <Compile Include="Tools\IdGenerator.cs" />
     <Compile Include="Model\MassUnit.cs" />
     <Compile Include="Model\MassValue.cs" />

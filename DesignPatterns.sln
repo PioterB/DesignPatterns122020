@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PbLab.DesignPatterns.App", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PbLab.DesginPatterns.App.Tests", "PbLab.DesginPatterns.App.Tests\PbLab.DesginPatterns.App.Tests.csproj", "{D8096D78-CDB5-4C97-BB46-CF98F94DC5D1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".documentation", ".documentation", "{85DC2064-4905-4033-9DD3-0067D0D50114}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

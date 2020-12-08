@@ -21,15 +21,15 @@ namespace PbLab.DesignPatterns.ViewModels
 {
 	public class MainWindowViewModel : ViewModelBase
 	{
-        private readonly ISamplesReaderFactory _readerFactory;
+        private readonly LocalFileReaderPool _readerFactory;
         private readonly ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
 		private readonly ObservableCollection<Sample> _samples = new ObservableCollection<Sample>();
 		private readonly ObservableCollection<string> _logs = new ObservableCollection<string>();
         private ILogger _logger;
 
-        public MainWindowViewModel(ISamplesReaderFactory readerFactory, LoggerFactory loggerFactory)
+        public MainWindowViewModel(LocalFileReaderPool readerPool, LoggerFactory loggerFactory)
 		{
-            _readerFactory = readerFactory;
+            _readerFactory = readerPool;
             _logger = loggerFactory.Create();
 			_logger.NewEntry += message => _logs.Add(message);
 
@@ -55,9 +55,12 @@ namespace PbLab.DesignPatterns.ViewModels
                 var extension = new FileInfo(file).Extension.Trim('.');
                 using (var stream = File.OpenText(file))
                 {
+                    var reader = _readerFactory.Borrow(extension);
 					timer.Start();
-                    var samples = _readerFactory.Get(extension).Read(stream).ToList();
+                    var samples = reader.Read(stream).ToList();
 					timer.Stop();
+					_readerFactory.Release(reader);
+					
                     samples.ForEach(s => _samples.Add(s));
 
                     stats.AddDuration(timer.Elapsed);
