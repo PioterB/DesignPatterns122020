@@ -6,6 +6,11 @@ namespace PbLab.DesignPatterns.Audit
     {
         public void Log(string message)
         {
+            Write(message);
+        }
+
+        private void Write(string message)
+        {
             NewEntry?.Invoke(Compose(message));
         }
 

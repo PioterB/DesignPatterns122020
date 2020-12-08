@@ -26,12 +26,14 @@ namespace PbLab.DesignPatterns.ViewModels
         private readonly ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
 		private readonly ObservableCollection<Sample> _samples = new ObservableCollection<Sample>();
 		private readonly ObservableCollection<string> _logs = new ObservableCollection<string>();
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public MainWindowViewModel(LocalFileReaderPool readerPool, LoggerFactory loggerFactory)
 		{
             _readerFactory = readerPool;
-            _logger = loggerFactory.Create();
+            //_logger = loggerFactory.Create(typeof(TimeStampDecorator), typeof(ThreadDecorator));
+			_logger = loggerFactory.Create("time", "thread");
+
 			_logger.NewEntry += message => _logs.Add(message);
 
             SelectedFiles = new ReadOnlyObservableCollection<string>(_selectedFiles);

@@ -67,9 +67,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Audit\AppDomainDecorator.cs" />
     <Compile Include="Audit\ComposedLogger.cs" />
     <Compile Include="Audit\ILogger.cs" />
     <Compile Include="Audit\LoggerFactory.cs" />
+    <Compile Include="Audit\ThreadDecorator.cs" />
+    <Compile Include="Audit\TimeStampDecorator.cs" />
     <Compile Include="Model\IMassValueBuilder.cs" />
     <Compile Include="Model\MassValueBuilder.cs" />
     <Compile Include="Services\LocalFileReaderFactory.cs" />
