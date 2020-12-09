@@ -22,7 +22,5 @@ namespace PbLab.DesignPatterns.Audit
         {
             return Thread.CurrentThread.ManagedThreadId.ToString();
         }
-
-        public event Action<string> NewEntry;
     }
 }

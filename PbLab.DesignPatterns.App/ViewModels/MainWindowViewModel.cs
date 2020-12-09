@@ -13,6 +13,7 @@ using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using PbLab.DesignPatterns.Audit;
+using PbLab.DesignPatterns.Messaging;
 using PbLab.DesignPatterns.Model;
 using PbLab.DesignPatterns.Reporting;
 using PbLab.DesignPatterns.Services;
@@ -20,23 +21,25 @@ using PbLab.DesignPatterns.Tools;
 
 namespace PbLab.DesignPatterns.ViewModels
 {
-	public class MainWindowViewModel : ViewModelBase
-	{
+	public class MainWindowViewModel : ViewModelBase, ISubscriber
+    {
         private readonly ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
 		private readonly ObservableCollection<Sample> _samples = new ObservableCollection<Sample>();
 		private readonly ObservableCollection<string> _logs = new ObservableCollection<string>();
         private readonly ILogger _logger;
         private readonly SourcesService _samplesService;
         private readonly IScheduler<string, Sample> _scheduler;
+        private readonly IMessenger _messenger;
 
-        public MainWindowViewModel(LoggerFactory loggerFactory, SourcesService samplesService, IScheduler<string, Sample> scheduler)
+        public MainWindowViewModel(LoggerFactory loggerFactory, SourcesService samplesService, IScheduler<string, Sample> scheduler, IMessenger messenger)
 		{
             _samplesService = samplesService;
             _scheduler = scheduler;
+            _messenger = messenger;
             //_logger = loggerFactory.Create(typeof(TimeStampDecorator), typeof(ThreadDecorator));
 			_logger = loggerFactory.Create("time", "thread");
 
-			_logger.NewEntry += message => _logs.Add(message);
+			messenger.Subscribe(this);
 
             SelectedFiles = new ReadOnlyObservableCollection<string>(_selectedFiles);
 			Samples = new ReadOnlyObservableCollection<Sample>(_samples);
@@ -53,7 +56,7 @@ namespace PbLab.DesignPatterns.ViewModels
             _samples.Clear();
 
 
-            var samples = _samplesService.ReadAllSources(_selectedFiles, _scheduler);
+            var samples = _samplesService.ReadAllSources(_selectedFiles, null);
 
             //var samples = SourceReader.ReadAllSources(_selectedFiles, _readerFactory, _logger, new ChanelFactory());
 			samples.ToList().ForEach(s => _samples.Add(s));
@@ -94,5 +97,10 @@ namespace PbLab.DesignPatterns.ViewModels
 		public RelayCommand<string> RemoveFileCmd { get; private set; }
 
 		public RelayCommand ReadFileCmd { get; private set; }
-	}
+
+        public void Notify(string message)
+        {
+			_logs.Add(message);
+        }
+    }
 }

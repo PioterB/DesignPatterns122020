@@ -74,6 +74,8 @@
     <Compile Include="Audit\LoggerFactory.cs" />
     <Compile Include="Audit\ThreadDecorator.cs" />
     <Compile Include="Audit\TimeStampDecorator.cs" />
+    <Compile Include="Messaging\ISubscriber.cs" />
+    <Compile Include="Messaging\Messenger.cs" />
     <Compile Include="Model\IMassValueBuilder.cs" />
     <Compile Include="Model\MassValueBuilder.cs" />
     <Compile Include="Services\ChanelFactory.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Services\JsonSerializer.cs" />
     <Compile Include="Services\ISamplesReaderFactory.cs" />
     <Compile Include="Tools\FileProxy.cs" />
+    <Compile Include="Messaging\IMessenger.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Reporting\ReportPrototype.cs" />
     <Compile Include="Reporting\SamplesReadStatistics.cs" />
@@ -142,6 +145,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Validation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

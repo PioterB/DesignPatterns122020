@@ -21,7 +21,5 @@ namespace PbLab.DesignPatterns.Audit
         {
             return DateTime.Now.ToString();
         }
-
-        public event Action<string> NewEntry;
     }
 }

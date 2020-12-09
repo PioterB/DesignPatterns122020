@@ -78,7 +78,7 @@
 
         <!-- logs -->
         <StackPanel Grid.Row="3" Grid.Column="0">
-            <TextBlock Text="Logs"/>
+            <TextBlock Text="Logs" MouseDown="UIElement_OnMouseDown"/>
             <ListBox ItemsSource="{Binding Logs}"/>
         </StackPanel>
     </Grid>

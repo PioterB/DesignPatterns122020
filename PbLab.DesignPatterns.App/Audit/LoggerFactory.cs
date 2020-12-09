@@ -3,17 +3,19 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using PbLab.DesignPatterns.Messaging;
 
 namespace PbLab.DesignPatterns.Audit
 {
     public class LoggerFactory
     {
         private readonly DecoratorTypeAdapter _decoratorAdapter;
-        private readonly ILogger _composedLogger = new ComposedLogger();
+        private readonly ILogger _composedLogger;
 
-        public LoggerFactory(DecoratorTypeAdapter decoratorAdapter)
+        public LoggerFactory(DecoratorTypeAdapter decoratorAdapter, IMessenger messenger)
         {
             _decoratorAdapter = decoratorAdapter;
+            _composedLogger = new ComposedLogger(messenger);
         }
 
         public ILogger Create(params string[] decorators)
@@ -57,7 +59,7 @@ namespace PbLab.DesignPatterns.Audit
         
         private static ILogger FactorizeDecorator(ILogger result, Type decoratorType)
         {
-            result = (ILogger) Activator.CreateInstance(decoratorType, BindingFlags.CreateInstance, null,  new[] {result});
+            result = (ILogger) Activator.CreateInstance(decoratorType, result);
             return result;
         }
     }

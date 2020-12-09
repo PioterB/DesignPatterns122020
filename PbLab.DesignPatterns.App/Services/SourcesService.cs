@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PbLab.DesignPatterns.Audit;
+using PbLab.DesignPatterns.Messaging;
 using PbLab.DesignPatterns.Model;
 using PbLab.DesignPatterns.Reporting;
 
@@ -109,13 +110,13 @@ namespace PbLab.DesignPatterns.Services
 
     public class StrictSourcesService : SourcesService
     {
-        public StrictSourcesService() : base(new LinearScheduler<string, Sample>())
+        private readonly ILogger _logger;
+
+        public StrictSourcesService(IMessenger messenger) : base(new LinearScheduler<string, Sample>())
         {
+            _logger = new ComposedLogger(messenger);
         }
-
-
-        private readonly ILogger _logger = new ComposedLogger();
-
+        
         protected override IChanel InitializeChanel(string protocol)
         {
             return new FileChanel();

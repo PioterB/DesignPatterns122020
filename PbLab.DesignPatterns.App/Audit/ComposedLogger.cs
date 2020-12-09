@@ -1,9 +1,17 @@
 ﻿using System;
+using PbLab.DesignPatterns.Messaging;
 
 namespace PbLab.DesignPatterns.Audit
 {
     internal class ComposedLogger : ILogger
     {
+        private readonly IMessenger _messenger;
+
+        public ComposedLogger(IMessenger messenger)
+        {
+            _messenger = messenger;
+        }
+
         public void Log(string message)
         {
             Write(message);
@@ -11,14 +19,7 @@ namespace PbLab.DesignPatterns.Audit
 
         private void Write(string message)
         {
-            NewEntry?.Invoke(Compose(message));
-        }
-
-        public event Action<string> NewEntry;
-
-        private string Compose(string message)
-        {
-            return message;
+            _messenger.Publish(message);
         }
     }
 }

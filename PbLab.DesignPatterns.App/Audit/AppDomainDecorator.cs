@@ -21,7 +21,5 @@ namespace PbLab.DesignPatterns.Audit
         {
             return AppDomain.CurrentDomain.Id.ToString();
         }
-
-        public event Action<string> NewEntry;
     }
 }
