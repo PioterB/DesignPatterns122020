@@ -82,10 +82,12 @@
     <Compile Include="Services\HttpChanel.cs" />
     <Compile Include="Services\IChanel.cs" />
     <Compile Include="Services\IChanelFactory.cs" />
+    <Compile Include="Services\IScheduler.cs" />
     <Compile Include="Services\LocalFileReaderFactory.cs" />
     <Compile Include="Services\LocalFileReaderPool.cs" />
     <Compile Include="Services\NullChanel.cs" />
     <Compile Include="Services\SourceReader.cs" />
+    <Compile Include="Services\SourcesService.cs" />
     <Compile Include="Tools\IdGenerator.cs" />
     <Compile Include="Model\MassUnit.cs" />
     <Compile Include="Model\MassValue.cs" />

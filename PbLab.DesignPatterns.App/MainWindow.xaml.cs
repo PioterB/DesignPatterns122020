@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using PbLab.DesignPatterns.Audit;
+using PbLab.DesignPatterns.Model;
 using PbLab.DesignPatterns.Services;
 using PbLab.DesignPatterns.ViewModels;
 
@@ -13,9 +15,16 @@ namespace PbLab.DesignPatterns
 		public MainWindow()
 		{
 			InitializeComponent();
-			var loggerFactory = new LoggerFactory(new DecoratorTypeAdapter());
 
-            DataContext = new MainWindowViewModel(new LocalFileReaderPool(new LocalFileReaderFactory()), loggerFactory);
+            IScheduler<string, Sample> scheduler = Environment.ProcessorCount == 1
+                ? (IScheduler<string, Sample>)new LinearScheduler<string, Sample>()
+                : new TasksScheduler<string, Sample>();
+
+			var loggerFactory = new LoggerFactory(new DecoratorTypeAdapter());
+            var readerPoll = new LocalFileReaderPool(new LocalFileReaderFactory());
+            var sourcesService = new SourcesService(readerPoll, loggerFactory.Create("time"), new ChanelFactory());
+
+            DataContext = new MainWindowViewModel(loggerFactory, sourcesService, scheduler);
         }
 	}
 }

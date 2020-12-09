@@ -22,15 +22,17 @@ namespace PbLab.DesignPatterns.ViewModels
 {
 	public class MainWindowViewModel : ViewModelBase
 	{
-        private readonly LocalFileReaderPool _readerFactory;
         private readonly ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
 		private readonly ObservableCollection<Sample> _samples = new ObservableCollection<Sample>();
 		private readonly ObservableCollection<string> _logs = new ObservableCollection<string>();
         private readonly ILogger _logger;
+        private readonly SourcesService _samplesService;
+        private readonly IScheduler<string, Sample> _scheduler;
 
-        public MainWindowViewModel(LocalFileReaderPool readerPool, LoggerFactory loggerFactory)
+        public MainWindowViewModel(LoggerFactory loggerFactory, SourcesService samplesService, IScheduler<string, Sample> scheduler)
 		{
-            _readerFactory = readerPool;
+            _samplesService = samplesService;
+            _scheduler = scheduler;
             //_logger = loggerFactory.Create(typeof(TimeStampDecorator), typeof(ThreadDecorator));
 			_logger = loggerFactory.Create("time", "thread");
 
@@ -49,8 +51,11 @@ namespace PbLab.DesignPatterns.ViewModels
 		private void OnReadFiles()
         {
             _samples.Clear();
-            
-            var samples = SourceReader.ReadAllSources(_selectedFiles, _readerFactory, _logger, new ChanelFactory());
+
+
+            var samples = _samplesService.ReadAllSources(_selectedFiles, _scheduler);
+
+            //var samples = SourceReader.ReadAllSources(_selectedFiles, _readerFactory, _logger, new ChanelFactory());
 			samples.ToList().ForEach(s => _samples.Add(s));
             
             _selectedFiles.Clear();
