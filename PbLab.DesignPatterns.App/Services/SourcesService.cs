@@ -15,21 +15,24 @@ namespace PbLab.DesignPatterns.Services
         private readonly LocalFileReaderPool _readersPool;
         private readonly ILogger _logger;
         private readonly IChanelFactory _chanelFactory;
+        private readonly IScheduler<string, Sample> _defaultScheduler;
 
-        protected SourcesService()
+        protected SourcesService(IScheduler<string, Sample> defaultScheduler)
         {
-
+            _defaultScheduler = defaultScheduler;
         }
 
-        public SourcesService(LocalFileReaderPool readersPool, ILogger logger, IChanelFactory chanelFactory)
+        public SourcesService(LocalFileReaderPool readersPool, ILogger logger, IChanelFactory chanelFactory, IScheduler<string, Sample> defaultScheduler)
         {
             _readersPool = readersPool;
             _logger = logger;
             _chanelFactory = chanelFactory;
+            _defaultScheduler = defaultScheduler;
         }
 
         public IEnumerable<Sample> ReadAllSources(IEnumerable<string> paths, IScheduler<string, Sample> scheduler)
         {
+            scheduler = scheduler ?? _defaultScheduler;
             var result = scheduler.Schedule(paths, Processing);
             return result;
         }
@@ -40,27 +43,52 @@ namespace PbLab.DesignPatterns.Services
             IEnumerable<Sample> samples;
 
             var timer = InitializeTimer();
-            var stats = new StatsBuilder(file);
-            var extension = new FileInfo(file).Extension.Trim('.');
+            var extension = GatherFormatType(file);
             var protocol = ExtractProtocol(file);
             var chanel = InitializeChanel(protocol);
+            var reader = GetReader(extension);
             using (var stream = chanel.Connect(file))
             {
-                var reader = _readersPool.Borrow(extension);
                 timer.Start();
                 samples = reader.Read(stream);
                 timer.Stop();
-                _readersPool.Release(reader);
-
-                stats.AddDuration(timer.Elapsed);
-                stats.AddCount((uint)samples.Count());
-
-                timer.Reset();
             }
 
-            _logger.Log(new ReportPrototype(DateTime.Now).Clone(stats.Build()));
+            DiscardReader(reader);
+            
+            var stats = BuildStatistics(file, timer.Elapsed, samples);
+            
+            Audit(stats);
 
             return samples;
+        }
+
+        protected virtual void Audit(SamplesReadStatistics stats)
+        {
+            _logger.Log(new ReportPrototype(DateTime.Now).Clone(stats));
+        }
+
+        protected virtual SamplesReadStatistics BuildStatistics(string file, TimeSpan duration, IEnumerable<Sample> samples)
+        {
+            var stats = new StatsBuilder(file);
+            stats.AddDuration(duration);
+            stats.AddCount((uint) samples.Count());
+            return stats.Build();
+        }
+
+        protected virtual void DiscardReader(ISamplesReader reader)
+        {
+            _readersPool.Release(reader);
+        }
+
+        protected virtual ISamplesReader GetReader(string extension)
+        {
+            return _readersPool.Borrow(extension);
+        }
+
+        protected virtual string GatherFormatType(string file)
+        {
+            return new FileInfo(file).Extension.Trim('.');
         }
 
         protected virtual IChanel InitializeChanel(string protocol)
@@ -76,6 +104,40 @@ namespace PbLab.DesignPatterns.Services
         protected virtual string ExtractProtocol(string file)
         {
             return file.Split(':').First();
+        }
+    }
+
+    public class StrictSourcesService : SourcesService
+    {
+        public StrictSourcesService() : base(new LinearScheduler<string, Sample>())
+        {
+        }
+
+
+        private readonly ILogger _logger = new ComposedLogger();
+
+        protected override IChanel InitializeChanel(string protocol)
+        {
+            return new FileChanel();
+        }
+
+        protected override string GatherFormatType(string file)
+        {
+            return file.Split('.').Last();
+        }
+
+        protected override ISamplesReader GetReader(string extension)
+        {
+            return new JsonSamplesReader();
+        }
+
+        protected override void DiscardReader(ISamplesReader reader)
+        {
+        }
+
+        protected override void Audit(SamplesReadStatistics stats)
+        {
+            _logger.Log(new ReportPrototype(DateTime.Now).Clone(stats));
         }
     }
 }

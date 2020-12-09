@@ -22,7 +22,8 @@ namespace PbLab.DesignPatterns
 
 			var loggerFactory = new LoggerFactory(new DecoratorTypeAdapter());
             var readerPoll = new LocalFileReaderPool(new LocalFileReaderFactory());
-            var sourcesService = new SourcesService(readerPoll, loggerFactory.Create("time"), new ChanelFactory());
+            //var sourcesService = new SourcesService(readerPoll, loggerFactory.Create("time"), new ChanelFactory());
+            var sourcesService = new StrictSourcesService();
 
             DataContext = new MainWindowViewModel(loggerFactory, sourcesService, scheduler);
         }

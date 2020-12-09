@@ -2,7 +2,7 @@
 
 namespace PbLab.DesignPatterns.Reporting
 {
-    internal class SamplesReadStatistics
+    public class SamplesReadStatistics
     {
         public string File { get; }
 
