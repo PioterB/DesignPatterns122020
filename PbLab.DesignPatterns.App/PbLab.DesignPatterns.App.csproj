@@ -87,9 +87,14 @@
     <Compile Include="Services\IScheduler.cs" />
     <Compile Include="Services\LocalFileReaderFactory.cs" />
     <Compile Include="Services\LocalFileReaderPool.cs" />
+    <Compile Include="Services\MySamplesCollection.cs" />
+    <Compile Include="Services\MySamplesCollectionEnumerator.cs" />
     <Compile Include="Services\NullChanel.cs" />
     <Compile Include="Services\SourceReader.cs" />
     <Compile Include="Services\SourcesService.cs" />
+    <Compile Include="Tools\ChainLink.cs" />
+    <Compile Include="Tools\GenericChainAction.cs" />
+    <Compile Include="Tools\IChainAction.cs" />
     <Compile Include="Tools\IdGenerator.cs" />
     <Compile Include="Model\MassUnit.cs" />
     <Compile Include="Model\MassValue.cs" />
@@ -101,6 +106,9 @@
     <Compile Include="Services\ISamplesReaderFactory.cs" />
     <Compile Include="Tools\FileProxy.cs" />
     <Compile Include="Messaging\IMessenger.cs" />
+    <Compile Include="Validation\IsNegative.cs" />
+    <Compile Include="Validation\NotNumber.cs" />
+    <Compile Include="Validation\EmptyString.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Reporting\ReportPrototype.cs" />
     <Compile Include="Reporting\SamplesReadStatistics.cs" />
@@ -145,8 +153,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Validation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

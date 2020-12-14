@@ -29,6 +29,7 @@ namespace PbLab.DesignPatterns.Services
             _logger = logger;
             _chanelFactory = chanelFactory;
             _defaultScheduler = defaultScheduler;
+
         }
 
         public IEnumerable<Sample> ReadAllSources(IEnumerable<string> paths, IScheduler<string, Sample> scheduler)

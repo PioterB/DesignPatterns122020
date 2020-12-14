@@ -21,5 +21,23 @@ namespace PbLab.DesignPatterns.Model
 		public DateTimeOffset TimeStamp { get; set; }
 
 		public MassValue Mass { get; set; }
+
+
+        public SampleSnapshot Snahpshot()
+        {
+			return new SampleSnapshot();
+        }
+
+        public void Restore(SampleSnapshot snapshot)
+        {
+
+        }
 	}
+
+    public class SampleSnapshot
+    {
+        public DateTime TimeStamp { get; }
+
+        public DateTime OryginalyCreated { get; }
+    }
 }
